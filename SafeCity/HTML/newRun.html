@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Run Challenge</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <link rel="stylesheet" href="css/runChallenge.css" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="shortcut icon" sizes="196x196" href="images/runChallenge.png" />
+        <link rel="apple-touch-icon-precomposed" href="images/runChallenge.png" />
+        <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 90%;
+            }
+      /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            }
+    </style>
+    </head>
+ 
+    <body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="custom-header mdl-layout__header mdl-layout__header--waterfall">
+                
+<!--    
+            <button onclick="location.href = 'index.html'; chooseFalse()" class="mdl-layout-icon mdl-button mdl-js-button mdl-button--icon">
+              <i class="material-icons">arrow_back</i>
+            </button>
+-->    
+            <div class="mdl-layout__header-row">
+              <span class="mdl-layout-title" id="headerBarTitle" onclick="openNav()">&#9776;</span>        
+            <img src = "images/WhiteLogo.jpg" width="300" height="50";>
+            </div>
+                                                <!-- Sidebar Menu -->
+            <div id="mySidenav" class="sidenav">
+              <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+              <a href="#">About</a>
+                <a href='#'>Heatmap
+             <label class="switch">
+                 <input id = "heatswitch" type="checkbox" onclick="Enable_heatmap()">
+                <span class="slider round"></span>
+            </label>
+                </a>
+            </div>
+          </header>
+            <!-- MAIN BODY CODE -->
+            <div><div id="pieChart" hidden="true"></div></div>
+        <div id="map"></div>
+          <main class="mdl-layout__content">
+              <ul class="mdl-list"></ul>             
+              <div class="btn-group" style="width:100%">
+                <button style="width:33.3%" class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">search</i></button>
+                  
+                <button id="updateDetailsComment5" style="width:33.3%" class="mdl-button mdl-button--raised mdl-js-button dialog-button" onclick="showPie()"><i class="material-icons" ></i></button>
+                  
+                <button id = "endRun" style="width:33.3%" class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">warning</i></button>
+            </div>
+              <!--   Main page content here:   -->
+              <div>
+                <!--Displays the information regarding the latitude and longitude as well as the accuracy of location-->  
+                <div class="mdl-cell mdl-cell--2-col-phone">
+                  </div>
+                  
+<!--
+              <button id="NewDest" style="background-color:lightgreen" onclick="randomDestination(pos)" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="buttons"></i>Set Destination</button>
+                    
+              <button id="NewRun" style="background-color:pink" onclick="beginRun()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="buttons"></i>Begin Run</button>
+                
+               <button id="endRun" style="background-color:lightblue" onclick="endRun()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="buttons"></i>End Run</button>
+-->
+                  
+            <!-- Outputs display when user has completed the Run -->
+            <dialog class="mdl-dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <caption>Tap on any button to call the respective department or report an incident that can alert others about it</caption>
+                    <h3 class="mdl-dialog_title">EMERGENCY CONTACTS</h3>
+                    <tr>
+                    <td>
+                    <button type="button"  class="police">
+                        <label><img id="police" src="images/icons8-police-32.png" height="60" width="60"><br></label>Police
+                    </button>
+                    </td>
+                    <td allign="center">
+                    <button type="button" class="hospital">
+                        <label><img id="hospital" src="images/icons8-ambulance-32.png" height="60" width="60"><br>Hospital</label>
+                    </button>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <button type="button" class="firefighter">
+                         <label><img id="firefighter" src="images/icons8-firefighter-30.png" height="60" width="60"><br>Firefighter</label></button>
+                    </td>
+                    <td>
+                        <button id="updateDetails" type="button" class="distress-signal">
+                         <label><img id="user_report" src="images/icons8-empty-flag-24.png" height="60" width="60"><br></label>Report</button>
+                    </td>
+                    </tr>
+                </table>
+                <div class="mdl-dialog__actions">
+                    <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-button close">Close</button>
+                </div>
+            </dialog>
+            
+            <dialog id="favDialog1">
+            <form method="dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <img src="images/City_of_Ballarat_outlines.png" width="300" height="80">
+                    <br>
+                    <span>Give us feedback on our public spaces to help improve our city!</span>
+                    <br>
+                    <span>How safe do you feel in our city?</span>
+                    <tr>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button" id="updateDetailsComment1"><i class="material-icons">sentiment_very_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button" id="updateDetailsComment2"><i class="material-icons">sentiment_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button" id="updateDetailsComment3"><i class="material-icons">sentiment_satisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button" id="updateDetailsComment4"><i class="material-icons">sentiment_very_satisfied</i></button></td>
+                    </tr>
+                </table>
+            <menu>
+                <caption>All data received from this survey is for the purpose of gathering information to improve safety spaces in the city of Ballarat.</caption>
+                <div class="btn-group">
+                <button>Cancel</button>
+                <button>Submit</button>
+                </div>
+            </menu>
+            </form>
+            </dialog>
+
+            <dialog id="favDialog2">
+            <form method="dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <img src="images/City_of_Ballarat_outlines.png" width="300" height="80">
+                    <br>
+                    <span>Give us feedback on our public spaces to help improve our city!</span>
+                    <br>
+                    <span>How safe do you feel in our city?</span>
+                    <tr>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_satisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_satisfied</i></button></td>
+                    </tr>
+                </table>
+                <p>We are sorry to hear that! could you tell us a possible reason why you do not feel safe where you are?</p><p><label>Reason for concern: <select><option>---Select one---</option><option>Busy - lots of people, activity</option><option>Unpredictable People - homeless, drunk/drugged, teen gangs</option><option>Harassment - begging, pushing, verbal, physical</option><option>Sexual Harassment - stalking, propositioning, groping, rape</option><option>Other</option></select></label></p>
+                <div class="btn-group" style="width:100%">
+                 <button style="width:100%" class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">camera_alt</i><br>Upload photo</button>
+                </div>
+            <menu>
+                <caption>All data received from this survey is for the purpose of gathering information to improve safety spaces in the city of Ballarat.</caption>
+                <div class="btn-group">
+                <button>Cancel</button>
+                <button>Submit</button>
+                </div>
+            </menu>
+            </form>
+            </dialog>      
+            <dialog id="favDialog3">
+            <form method="dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <img src="images/City_of_Ballarat_outlines.png" width="300" height="80">
+                    <br>
+                    <span>Give us feedback on our public spaces to help improve our city!</span>
+                    <br>
+                    <span>How safe do you feel in our city?</span>
+                    <tr>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_satisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_satisfied</i></button></td>
+                    </tr>
+                </table>
+                <p>We are sorry to hear that! could you tell us a possible reason why you do not feel safe where you are?</p><p><label>Reason for concern: <select><option>---Select one---</option><option>Busy - lots of people, activity</option><option>Unpredictable People - homeless, drunk/drugged, teen gangs</option><option>Harassment - begging, pushing, verbal, physical</option><option>Sexual Harassment - stalking, propositioning, groping, rape</option><option>Other</option></select></label></p>
+                <div class="btn-group" style="width:100%">
+                 <button style="width:100%" class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">camera_alt</i><br>Upload photo</button>
+                </div>
+            <menu>
+                <caption>All data received from this survey is for the purpose of gathering information to improve safety spaces in the city of Ballarat.</caption>
+                <div class="btn-group">
+                <button>Cancel</button>
+                <button>Submit</button>
+                </div>
+            </menu>
+            </form>
+            </dialog>   
+            <dialog id="favDialog4">
+            <form method="dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <img src="images/City_of_Ballarat_outlines.png" width="300" height="80">
+                    <br>
+                    <span>Give us feedback on our public spaces to help improve our city!</span>
+                    <br>
+                    <span>How safe do you feel in our city?</span>
+                    <tr>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_satisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_satisfied</i></button></td>
+                    </tr>
+                </table>
+                <p>That is great! Could you tell us why you feel safe where you are?</p><p><label>Reason for safety: <select><option>---Select one---</option><option>Well Lit - considered lighting</option><option>Busy - lots of people, activity</option><option>Obvious Security - Police, Public Safety Officer</option><option>Other</option></select></label></p>
+            <menu>
+                <caption>All data received from this survey is for the purpose of gathering information to improve safety spaces in the city of Ballarat.</caption>
+                <div class="btn-group">
+                <button>Cancel</button>
+                <button>Submit</button>
+                </div>
+            </menu>
+            </form>
+            </dialog> 
+            <dialog id="favDialog5">
+            <form method="dialog">
+                <table id ="result" class="mdl-dialog__content">
+                    <img src="images/City_of_Ballarat_outlines.png" width="300" height="80">
+                    <br>
+                    <span>Give us feedback on our public spaces to help improve our city!</span>
+                    <br>
+                    <span>How safe do you feel in our city?</span>
+                    <tr>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_dissatisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_satisfied</i></button></td>
+                        <td><button class="mdl-button mdl-button--raised mdl-js-button dialog-button"><i class="material-icons">sentiment_very_satisfied</i></button></td>
+                    </tr>
+                </table>
+                <p>That is great! Could you tell us why you feel safe where you are?</p><p><label>Reason for safety: <select><option>---Select one---</option><option>Well Lit - considered lighting</option><option>Busy - lots of people, activity</option><option>Obvious Security - Police, Public Safety Officer</option><option>Other</option></select></label></p>
+            <menu>
+                <caption>All data received from this survey is for the purpose of gathering information to improve safety spaces in the city of Ballarat.</caption>
+                <div class="btn-group">
+                <button>Cancel</button>
+                <button>Submit</button>
+                </div>
+            </menu>
+            </form>
+            </dialog>      
+            <!-- User input feedback to the government -->      
+            <dialog id="favDialog6">
+            <form method="dialog">
+                <h5> Pie chart based on the data received from the civilians</h5>
+                <div id="piechart" width = "200px" height="500px"></div>
+            <menu>
+                <div class="btn-group">
+                <button>Cancel</button>
+                </div>
+            </menu>
+            </form>
+            </dialog>            
+        <script>
+            var dialog = document.querySelector('dialog');
+            var showDialogButton = document.querySelector('#endRun');
+            if (! dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            showDialogButton.addEventListener('click', function() {
+                    dialog.showModal();
+            });
+            dialog.querySelector('.close').addEventListener('click', function() {
+            dialog.close();
+            });
+            
+            (function() {
+                var updateButton = document.getElementById('updateDetails');
+                var favDialog = document.getElementById('favDialog1');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+            (function() {
+                var updateButton = document.getElementById('updateDetailsComment1');
+                var favDialog = document.getElementById('favDialog2');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+            (function() {
+                var updateButton = document.getElementById('updateDetailsComment2');
+                var favDialog = document.getElementById('favDialog3');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+            (function() {
+                var updateButton = document.getElementById('updateDetailsComment3');
+                var favDialog = document.getElementById('favDialog4');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+            (function() {
+                var updateButton = document.getElementById('updateDetailsComment4');
+                var favDialog = document.getElementById('favDialog5');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+            (function() {
+                var updateButton = document.getElementById('updateDetailsComment5');
+                var favDialog = document.getElementById('favDialog6');
+                
+                // “Update details” button opens the <dialog> modally
+                updateButton.addEventListener('click', function() {
+                favDialog.showModal();
+            });
+            })();
+
+        </script>         
+              </div>
+              
+              <!--Toast messages for errors or need to deliver message to user-->
+              <!-- Some how make this work... -->
+            <!--<div id="storageError">Your browser does not support localStorage</div>-->
+          </main>
+            
+          <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+          </div>
+        </div>
+        
+        <!--Display once user has completed the run. It will also display the results of the user's run-->
+              
+        
+    <!--   JavaScript files:   -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="js/utility.js"></script>
+    <script src="js/shared.js"></script>
+        
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        
+    <script src="js/newRunPage.js"></script>
+    <script async defer
+  src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDSw7xlQixFVmCh9_9lnmzDQ-nk-a5isrg&callback=initMap&libraries=geometry,visualization">
+    </script>
+        
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+        
+    <script src="js/data2Mark.js"></script>
+        
+    <!--<script src="js/cctv.js"></script>-->
+        
+    <script src="js/markerclusterer.js"></script>
+                
+    </body>
+</html>
